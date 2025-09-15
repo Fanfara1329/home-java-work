@@ -1,0 +1,45 @@
+public class Sum {
+    public static void main(String[] args) {
+        int acc = 0;
+        boolean f = false;
+        String a = "";
+        //System.out.println(args.length + "__len");
+        for (int i = 0; i < args.length; i++) {
+            int l = args[i].length();
+            for (int j = 0; j < l; j++) {
+                char r = args[i].charAt(j);
+                //System.out.println(r +"__chr");
+                if (Character.isDigit(r)) {
+                    a += String.valueOf(r);
+                    f = true;
+                    //System.out.println(a + "__digit");
+                } else {
+                    //System.out.println(a+ "__in");
+                    if (f) {
+                        if (j - a.length() - 1 >= 0 && args[i].charAt(j - a.length() - 1) == '-') {
+                            acc -= Integer.parseInt(a);
+                            //System.out.println("cocococo1");
+                        } else {
+                            //System.out.println(a + "__plus");
+                            acc += Integer.parseInt(a);
+                        }
+                    }
+                    /*System.out.println(a);*/
+                    a = "";
+                    f = false;
+                }
+            }
+            if (f) {
+                if (l - a.length() - 1 >= 0 && args[i].charAt(l - a.length() - 1) == '-') {
+                    acc -= Integer.parseInt(a);
+                    //System.out.println("cocococo2");
+                } else  {
+                    acc += Integer.parseInt(a);
+                }
+            }
+            a = "";
+            f = false;
+        }
+        System.out.println(acc);
+    }
+}
