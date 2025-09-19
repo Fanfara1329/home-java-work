@@ -1,0 +1,47 @@
+public class SumDoubleHex {
+    public static void main(String[] args) {
+        double acc = 0;
+        for (int i = 0; i < args.length; i++) {
+            int ind = 0, l = args[i].length();
+            boolean f = false, f2 = false;
+            String s = args[i];
+            for (int j = 0; j < args[i].length(); j++) {
+                if (Character.isDigit(s.charAt(j))) {
+                    f = true;
+                }
+                if (!(Character.isWhitespace(s.charAt(j))) & !(f2)) {
+                    ind = j;
+                    f2 = true;
+                } else if (Character.isWhitespace(s.charAt(j)) & f2) {
+                    String a = s.substring(ind, j);
+                    if ((a.contains("x") | a.contains("X")) & !(a.contains(".") | a.contains("p"))) {
+                        if (a.contains("x") | a.contains("X")) {
+                            acc += Long.decode(a);
+                        } else {
+                            acc += Long.decode(Integer.toString(Integer.parseInt(a)));
+                        }
+                    } else {
+                        acc += Double.parseDouble(a);
+                    }
+                    f2 = false;
+                    f = false;
+                }
+            }
+            if (f) {
+                String a = s.substring(ind, l);
+                if ((a.contains("x") | a.contains("X")) & !(a.contains(".") | a.contains("p"))) {
+                    if (a.contains("x") | a.contains("X")) {
+                        acc += Long.decode(a);
+                    } else {
+                        acc += Long.decode(Integer.toString(Integer.parseInt(a)));
+                    }
+                } else {
+                    acc += Double.parseDouble(a);
+                }
+            }
+        }
+        System.out.println(acc);
+    }
+}
+
+//java -ea -jar SumTest.jar 3637
