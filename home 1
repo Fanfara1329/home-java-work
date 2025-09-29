@@ -29,19 +29,12 @@ public class SumDoubleHex {
 
         System.out.println(acc);
     }
+
     public static double conv(String s, int ind, int l) {
-        String a = s.substring(ind, l);
-        return Long.parseLong(a);
-        if ((a.contains("x") | a.contains("X")) & !(a.contains(".") | a.contains("p"))) {
-            if (a.contains("x") | a.contains("X")) {
-                return Long.decode(a);
-            } else {
-                return Long.decode(Integer.toString(Integer.parseInt(a)));
-            }
-        } else {
-            return Double.parseDouble(a);
+        s = s.substring(ind, l).toLowerCase();
+        if (s.contains("x") & !(s.contains("p"))) {
+            s += "p0";
         }
+        return Double.parseDouble(s);
     }
 }
-
-//java -ea -jar SumTest.jar 3637
