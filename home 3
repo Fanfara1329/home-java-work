@@ -1,12 +1,14 @@
+import java.lang.Math;
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.lang.Math;
 
 public class ReverseMaxC {
     public static void main(String[] args) {
         int[][] l = new int[1][];
-        int kep = 1, i = 0;
+        int kep = 1, imax = 0, jmax = 0;
         Scanner scan = new Scanner(System.in);
         while (scan.hasNextLine()) {
             String s = scan.nextLine();
@@ -20,13 +22,25 @@ public class ReverseMaxC {
                 }
             }
             arr = Arrays.copyOf(arr, cnt);
-            if (i == kep) {
+            jmax = Math.max(jmax, cnt);
+            if (imax == kep) {
                 l = Arrays.copyOf(l, kep <<= 1);
             }
-            l[i++] = arr;
+            l[imax++] = arr;
         }
-        l = Arrays.copyOf(l, i);
-        for (int j = 0; j < i; j++) {
+        l = Arrays.copyOf(l, imax);
+        Integer max = Integer.MIN_VALUE;
+        for (int j = 0; j < jmax; j++) {
+            max = Integer.MIN_VALUE;
+            for (int i = imax - 1; i > -1; i--) {
+                if (l[i].length <= j) {
+                    continue;
+                }
+                max = Math.max(max, l[i][j]);
+                l[i][j] = max;
+            }
+        }
+        for (int j = 0; j < imax; j++) {
             for (int p : l[j]) {
                 System.out.print(p + " ");
             }
@@ -34,3 +48,5 @@ public class ReverseMaxC {
         }
     }
 }
+
+//java -ea -jar ReverseTest.jar 3637
