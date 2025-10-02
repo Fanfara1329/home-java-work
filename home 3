@@ -1,42 +1,34 @@
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 
-
-public class Reverse {
+public class ReverseMaxC {
     public static void main(String[] args) {
-        int j = -1;
-        List<List<Integer>> num = new ArrayList<>();
-        Scanner scanner = new Scanner(System.in);
-        while (scanner.hasNextLine()) {
-            String s = scanner.nextLine();
-            num.add(new ArrayList<>());
-            j++;
-            if (s.isEmpty()) {
-                continue;
-            }
-            int ind = s.length();
-            boolean f = false;
-            for (int i = s.length() - 1; i > -1; i--) {
-                if (Character.isDigit(s.charAt(i))) {
-                    f = true;
-                }
-                if (Character.isWhitespace(s.charAt(i)) & f) {
-                    num.get(j).add(Integer.parseInt(s.substring(i + 1, ind)));
-                    ind = i;
-                    f = false;
+        int[][] l = new int[1][];
+        int kep = 1, i = 0;
+        Scanner scan = new Scanner(System.in);
+        while (scan.hasNextLine()) {
+            String s = scan.nextLine();
+            int[] arr = new int[1];
+            int k = 1, cnt = 0;
+            Scanner sc = new Scanner(s);
+            while (sc.hasNext()) {
+                arr[cnt++] = Integer.parseInt(sc.next());
+                if (cnt == k) {
+                    arr = Arrays.copyOf(arr, k <<= 1);
                 }
             }
-            if (f) {
-                num.get(j).add(Integer.parseInt(s.substring(0, ind)));
+            arr = Arrays.copyOf(arr, cnt);
+            if (i == kep) {
+                l = Arrays.copyOf(l, kep <<= 1);
             }
+            l[i++] = arr;
         }
-        print(num);
-    }
-    public static void print(List<List<Integer>> num) {
-        for (int i = num.size() - 1; i > -1; i--) {
-            for (int j : num.get(i)) {
-                System.out.print(j + " ");
+        l = Arrays.copyOf(l, i);
+        for (int j = 0; j < i; j++) {
+            for (int p : l[j]) {
+                System.out.print(p + " ");
             }
             System.out.println();
         }
