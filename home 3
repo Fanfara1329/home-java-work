@@ -7,46 +7,50 @@ import java.lang.Math;
 
 public class ReverseMaxC {
     public static void main(String[] args) {
-        int[][] l = new int[1][];
+        int[][] lst = new int[1][];
         int kep = 1, imax = 0, jmax = 0;
+
         Scanner scan = new Scanner(System.in);
         while (scan.hasNextLine()) {
             String s = scan.nextLine();
             int[] arr = new int[1];
             int k = 1, cnt = 0;
             Scanner sc = new Scanner(s);
+
             while (sc.hasNext()) {
                 arr[cnt++] = Integer.parseInt(sc.next());
                 if (cnt == k) {
                     arr = Arrays.copyOf(arr, k <<= 1);
                 }
             }
+            
             arr = Arrays.copyOf(arr, cnt);
             jmax = Math.max(jmax, cnt);
             if (imax == kep) {
-                l = Arrays.copyOf(l, kep <<= 1);
+                lst = Arrays.copyOf(l, kep <<= 1);
             }
-            l[imax++] = arr;
+            lst[imax++] = arr;
         }
-        l = Arrays.copyOf(l, imax);
+        
+        lst = Arrays.copyOf(lst, imax);
         Integer max = Integer.MIN_VALUE;
+        
         for (int j = 0; j < jmax; j++) {
             max = Integer.MIN_VALUE;
             for (int i = imax - 1; i > -1; i--) {
-                if (l[i].length <= j) {
+                if (lst[i].length <= j) {
                     continue;
                 }
-                max = Math.max(max, l[i][j]);
-                l[i][j] = max;
+                max = Math.max(max, lst[i][j]);
+                lst[i][j] = max;
             }
         }
+        
         for (int j = 0; j < imax; j++) {
-            for (int p : l[j]) {
+            for (int p : lst[j]) {
                 System.out.print(p + " ");
             }
             System.out.println();
         }
     }
 }
-
-//java -ea -jar ReverseTest.jar 3637
