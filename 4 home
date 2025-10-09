@@ -12,22 +12,26 @@ public class WordStatLengthMiddle {
     public static void main(String[] args) {
 
         LinkedHashMap<String, Integer> lhm = new LinkedHashMap<String, Integer>();
+
         try {
-            Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(args[0]), "UTF8"));
+            Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream("in"), "UTF8"));
             try {
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(args[1]), "UTF8"));
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("out"), "UTF8"));
                 try {
                     char[] buffer = new char[4096];
                     char[] chr = new char[256];
                     int cnt = 0;
                     int read = reader.read(buffer);
+
                     while (read > -1) {
                         String s = new String(buffer, 0, read);
+
                         for (int i = 0; i < s.length(); i++) {
-                            if (IsChar(s.charAt(i))) {
+                            if (isWordChar(s.charAt(i))) {
                                 if (cnt == chr.length) {
                                     chr = Arrays.copyOf(chr, chr.length << 1);
                                 }
+
                                 chr[cnt++] = s.charAt(i);
                             } else {
                                 String s1 = new String(chr, 0, cnt).toLowerCase();
@@ -35,53 +39,44 @@ public class WordStatLengthMiddle {
                                 if (s1.isEmpty() | s1.length() < 7) {
                                     continue;
                                 }
-                                s1 = s1.substring(3, s1.length() - 3);
-                                /*if (args[0] == "test24.in")
-                                    lhm.put("st", 1);
-                                else*/
-                                lhm.merge(s1, 1, Integer::sum);
-                                cnt = 0;
+
+                                lhm.merge(s1.substring(3, s1.length() - 3), 1, Integer::sum);
                             }
+
                         }
                         read = reader.read(buffer);
                     }
+
                     String s1 = new String(chr, 0, cnt).toLowerCase();
                     if (!(s1.isEmpty()) & s1.length() > 6) {
-                        /*if (args[0] == "test24.in")
-                            lhm.put("st", 1);
-                        else*/
                         lhm.merge(s1.substring(3, s1.length() - 3), 1, Integer::sum);
                     }
 
                 } finally {
-                    //System.err.println(lhm);
                     List<String> keys = new ArrayList<>(lhm.keySet());
-                    keys.sort(Comparator.comparingInt(String::length)); // только длина
+                    keys.sort(Comparator.comparingInt(String::length));
 
                     for (String key : keys) {
-                        writer.write(key);
-                        writer.write(" ");
-                        writer.write(Integer.toString(lhm.get(key)));
+                        writer.write(key + " " + Integer.toString(lhm.get(key)));
                         writer.newLine();
                     }
+
                     writer.close();
                 }
             } finally {
                 reader.close();
             }
-        } catch (
-                IOException e) {
-            System.err.println("File not found");
-        } //catch (InputMismatchException e) {
-        //System.err.println("Invalid input format " + e.getMessage());
-        //e.printStackTrace();
-        //} catch (FileNotFoundException e) {
-        // System.err.println("Input file not found " + e.getMessage());
-        //}
-        System.out.println(lhm);
+        } catch (FileNotFoundException e) {
+            System.err.println("Input file not found: " + e.getMessage());
+        } catch (InputMismatchException e) { // имеет смысл только если ты реально используешь Scanner.nextInt/и т.п.
+            System.err.println("Invalid input format: " + e.getMessage());
+            e.printStackTrace(); // убери, если не нужен стек
+        } catch (IOException e) {
+            System.err.println("IOException: " + e.getMessage());
+        }
     }
 
-    public static boolean IsChar(char c) {
+    public static boolean isWordChar(char c) {
         return Character.isLetter(c) || c == '\'' || Character.getType(c) == Character.DASH_PUNCTUATION;
     }
 }
