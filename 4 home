@@ -75,4 +75,4 @@ public class WordStat {
 }
 
 
-// linkedHashmap
+// java -ea -jar WordStatTest.jar Base
