@@ -8,17 +8,17 @@ import java.util.LinkedHashMap;
 import java.util.InputMismatchException;
 import java.io.*;
 
-public class WordStatLengthMiddle {
+public class WordStat {
     public static void main(String[] args) {
 
         LinkedHashMap<String, Integer> lhm = new LinkedHashMap<String, Integer>();
 
         try {
-            Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream("in"), "UTF8"));
+            Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(args[0]), "UTF8"));
             try {
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("out"), "UTF8"));
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(args[1]), "UTF8"));
                 try {
-                    char[] buffer = new char[4096];
+                    char[] buffer = new char[128];
                     char[] chr = new char[256];
                     int cnt = 0;
                     int read = reader.read(buffer);
@@ -27,20 +27,18 @@ public class WordStatLengthMiddle {
                         String s = new String(buffer, 0, read);
 
                         for (int i = 0; i < s.length(); i++) {
-                            if (isWordChar(s.charAt(i))) {
+                            if (IsChar(s.charAt(i))) {
                                 if (cnt == chr.length) {
                                     chr = Arrays.copyOf(chr, chr.length << 1);
                                 }
-
                                 chr[cnt++] = s.charAt(i);
                             } else {
                                 String s1 = new String(chr, 0, cnt).toLowerCase();
                                 cnt = 0;
-                                if (s1.isEmpty() | s1.length() < 7) {
+                                if (s1.isEmpty()) {
                                     continue;
                                 }
-
-                                lhm.merge(s1.substring(3, s1.length() - 3), 1, Integer::sum);
+                                lhm.merge(s1, 1, Integer::sum);
                             }
 
                         }
@@ -48,19 +46,15 @@ public class WordStatLengthMiddle {
                     }
 
                     String s1 = new String(chr, 0, cnt).toLowerCase();
-                    if (!(s1.isEmpty()) & s1.length() > 6) {
-                        lhm.merge(s1.substring(3, s1.length() - 3), 1, Integer::sum);
+                    if (!(s1.isEmpty())) {
+                        lhm.merge(s1, 1, Integer::sum);
                     }
 
                 } finally {
-                    List<String> keys = new ArrayList<>(lhm.keySet());
-                    keys.sort(Comparator.comparingInt(String::length));
-
-                    for (String key : keys) {
+                    for (String key : lhm.keySet()) {
                         writer.write(key + " " + Integer.toString(lhm.get(key)));
                         writer.newLine();
                     }
-
                     writer.close();
                 }
             } finally {
@@ -73,10 +67,10 @@ public class WordStatLengthMiddle {
         }
     }
 
-    public static boolean isWordChar(char c) {
+    public static boolean IsChar(char c) {
         return Character.isLetter(c) || c == '\'' || Character.getType(c) == Character.DASH_PUNCTUATION;
     }
 }
 
 
-// java -ea -jar WordStatTest.jar 3637
+// linkedHashmap
