@@ -1,0 +1,108 @@
+import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.TreeMap;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.util.LinkedHashMap;
+import java.util.InputMismatchException;
+import java.io.*;
+
+public class WordStat {
+    public static void main(String[] args) {
+
+        LinkedHashMap<String, Integer> lhm = new LinkedHashMap<String, Integer>();
+
+        try {
+            Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(args[0]), "UTF8"));
+            try {
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(args[1]), "UTF8"));
+                try {
+                    char[] buffer = new char[4096];
+                    char[] chr = new char[256];
+                    int cnt = 0;
+                    int read = reader.read(buffer);
+                    //System.out.println(buffer);
+                    while (read > -1) {
+                        String s = new String(buffer, 0, read);
+                        for (int i = 0; i < s.length(); i++) {
+                            //System.out.print(i + " ");
+                            if (IsChar(s.charAt(i))) {
+                                if (cnt == chr.length) {
+                                    chr = Arrays.copyOf(chr, chr.length << 1);
+                                }
+                                chr[cnt++] = s.charAt(i);
+                            } else {
+                                //System.out.println(chr.length);
+                                String s1 = new String(chr, 0, cnt).toLowerCase();
+                                if (s1.isEmpty()) {
+                                    continue;
+                                }
+                                lhm.merge(s1, 1, Integer::sum);
+                            /*System.out.println(lhm + "   -" + s1 + "-   " + lhm.containsKey(s1));
+                            if (lhm.containsKey(s1)) {
+                                lhm.put(s1, lhm.get(s1) + 1);
+                            } else {
+                                lhm.put(s1, 1);
+                            }*/
+                                cnt = 0;
+                                //System.out.print("-------");
+                                //chr = new char[256];
+                            }
+                        }
+                        read = reader.read(buffer);
+                        // вот тут могут быть ошибки, типо когда бафер заканчивается не обязательно прибавлять строку
+                        String s1 = new String(chr, 0, cnt).toLowerCase();
+                        if (s1.isEmpty()) {
+                            continue;
+                        }
+                        lhm.merge(s1, 1, Integer::sum);
+                        /*if (cnt > 0) {
+                String s1 = new String(chr, 0, cnt).toLowerCase(Locale.ROOT);
+                if (!s1.isEmpty()) {
+                    lhm.merge(s1, 1, Integer::sum);
+                }
+            }*/
+                    /*if (lhm.containsKey(s1)) {
+                        lhm.put(s1, lhm.get(s1) + 1);
+                    } else {
+                        lhm.put(s1, 1);
+                    }
+                    //System.out.print("-------");*/
+                    }
+                } finally {
+                    for (String key : lhm.keySet()) {
+                        writer.write(key);
+                        writer.write(" ");
+                        System.out.println(lhm.get(key));
+                        writer.write(Integer.toString(lhm.get(key)));
+                        writer.newLine();
+                    }
+                    writer.close();
+                }
+            } finally {
+                reader.close();
+            }
+            System.err.println(lhm);
+        } catch (
+                IOException e) {
+            System.err.println("File not found");
+        } //catch (InputMismatchException e) {
+        //System.err.println("Invalid input format " + e.getMessage());
+        //e.printStackTrace();
+        //} catch (FileNotFoundException e) {
+        // System.err.println("Input file not found " + e.getMessage());
+        //}
+    }
+
+    public static boolean IsChar(char c) {
+        System.out.println(Character.toString(c) == "'");
+        return Character.isLetter(c)
+                || c == '\''             // U+0027, обычный апостроф
+                || c == '\u2019'         // U+2019, типографский апостроф ’ (часто встречается)
+                || Character.getType(c) == Character.DASH_PUNCTUATION;
+    }
+}
+
+
+// linkedHashmap
