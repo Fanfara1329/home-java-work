@@ -68,9 +68,6 @@ public class WordStatLengthMiddle {
             }
         } catch (FileNotFoundException e) {
             System.err.println("Input file not found: " + e.getMessage());
-        } catch (InputMismatchException e) { // имеет смысл только если ты реально используешь Scanner.nextInt/и т.п.
-            System.err.println("Invalid input format: " + e.getMessage());
-            e.printStackTrace(); // убери, если не нужен стек
         } catch (IOException e) {
             System.err.println("IOException: " + e.getMessage());
         }
