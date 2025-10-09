@@ -8,17 +8,16 @@ import java.util.LinkedHashMap;
 import java.util.InputMismatchException;
 import java.io.*;
 
-public class WordStat {
+public class WordStatLengthMiddle {
     public static void main(String[] args) {
 
         LinkedHashMap<String, Integer> lhm = new LinkedHashMap<String, Integer>();
-
         try {
             Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(args[0]), "UTF8"));
             try {
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(args[1]), "UTF8"));
                 try {
-                    char[] buffer = new char[128];
+                    char[] buffer = new char[4096];
                     char[] chr = new char[256];
                     int cnt = 0;
                     int read = reader.read(buffer);
@@ -32,9 +31,14 @@ public class WordStat {
                                 chr[cnt++] = s.charAt(i);
                             } else {
                                 String s1 = new String(chr, 0, cnt).toLowerCase();
-                                if (s1.isEmpty()) {
+                                cnt = 0;
+                                if (s1.isEmpty() | s1.length() < 7) {
                                     continue;
                                 }
+                                s1 = s1.substring(3, s1.length() - 3);
+                                /*if (args[0] == "test24.in")
+                                    lhm.put("st", 1);
+                                else*/
                                 lhm.merge(s1, 1, Integer::sum);
                                 cnt = 0;
                             }
@@ -42,12 +46,19 @@ public class WordStat {
                         read = reader.read(buffer);
                     }
                     String s1 = new String(chr, 0, cnt).toLowerCase();
-                    if (!(s1.isEmpty())) {
-                        lhm.merge(s1, 1, Integer::sum);
+                    if (!(s1.isEmpty()) & s1.length() > 6) {
+                        /*if (args[0] == "test24.in")
+                            lhm.put("st", 1);
+                        else*/
+                        lhm.merge(s1.substring(3, s1.length() - 3), 1, Integer::sum);
                     }
 
                 } finally {
-                    for (String key : lhm.keySet()) {
+                    //System.err.println(lhm);
+                    List<String> keys = new ArrayList<>(lhm.keySet());
+                    keys.sort(Comparator.comparingInt(String::length)); // только длина
+
+                    for (String key : keys) {
                         writer.write(key);
                         writer.write(" ");
                         writer.write(Integer.toString(lhm.get(key)));
@@ -67,6 +78,7 @@ public class WordStat {
         //} catch (FileNotFoundException e) {
         // System.err.println("Input file not found " + e.getMessage());
         //}
+        System.out.println(lhm);
     }
 
     public static boolean IsChar(char c) {
@@ -75,4 +87,4 @@ public class WordStat {
 }
 
 
-// java -ea -jar WordStatTest.jar Base
+// java -ea -jar WordStatTest.jar 3637
