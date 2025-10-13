@@ -1,4 +1,4 @@
-class Scanner {
+class Scanner implements Closeable {
     private final BufferedReader in;
     private String line = null;
     private StringBuilder builder = new StringBuilder();
@@ -88,5 +88,14 @@ class Scanner {
 
     public int nextInt() {
         return Integer.parseInt(next());
+    }
+
+    @Override
+    public void close() {
+        try {
+            in.close();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 }
