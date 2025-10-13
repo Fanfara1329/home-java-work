@@ -1,56 +1,49 @@
-import java.lang.Math;
-import java.util.Scanner;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.lang.Math;
+import java.util.*;
+import java.io.*;
 
-public class ReverseMaxC {
+
+public class Reverse {
     public static void main(String[] args) {
-        int[][] lst = new int[1][];
-        int kep = 1, imax = 0, jmax = 0;
+        // list
+        int[][] matrix = new int[1][];
+        // multiple vars
+        // iMax, jMax
+        // amount -> number
+        int amount = 1, imax = 0, jmax = 0;
 
         Scanner scan = new Scanner(System.in);
         while (scan.hasNextLine()) {
             String s = scan.nextLine();
             int[] arr = new int[1];
-            int k = 1, cnt = 0;
+            int k = 1, cnt = 0; // explicit length
             Scanner sc = new Scanner(s);
 
             while (sc.hasNext()) {
-                arr[cnt++] = Integer.parseInt(sc.next());
+                arr[cnt++] = sc.nextInt();
                 if (cnt == k) {
                     arr = Arrays.copyOf(arr, k <<= 1);
                 }
             }
-            
-            arr = Arrays.copyOf(arr, cnt);
+
             jmax = Math.max(jmax, cnt);
-            if (imax == kep) {
-                lst = Arrays.copyOf(l, kep <<= 1);
+            if (imax == amount) {
+                matrix = Arrays.copyOf(matrix, amount <<= 1);
             }
-            lst[imax++] = arr;
+            matrix[imax++] = Arrays.copyOf(arr, cnt);
         }
-        
-        lst = Arrays.copyOf(lst, imax);
+
+        matrix = Arrays.copyOf(matrix, imax);
         Integer max = Integer.MIN_VALUE;
-        
-        for (int j = 0; j < jmax; j++) {
-            max = Integer.MIN_VALUE;
-            for (int i = imax - 1; i > -1; i--) {
-                if (lst[i].length <= j) {
-                    continue;
-                }
-                max = Math.max(max, lst[i][j]);
-                lst[i][j] = max;
-            }
-        }
-        
-        for (int j = 0; j < imax; j++) {
-            for (int p : lst[j]) {
-                System.out.print(p + " ");
+
+        // squar
+
+        for (int i = matrix.length - 1; i >= 0; i--) {
+            for (int j = matrix[i].length - 1; j >= 0; j--) {
+                System.out.print(matrix[i][j] + " ");
             }
             System.out.println();
         }
     }
 }
+
+//    java -ea -jar ReverseTest.jar Base
